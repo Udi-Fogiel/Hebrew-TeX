@@ -2,66 +2,27 @@
 
 \usetheme{metropolis}
 
-% babel settings. 
-% The babel package modifies font, 
-% hyphenation rules, directionality 
-% and more, according to the selecet language.
-
-\usepackage[
-	bidi=basic, % this option cahnges the directionality 
-				% and language settings without the need 
-				% of \selectlanguage, or \foreignlanguage, (at least not all the time) 
-				% by detecting the glyphs unicode, and applying 
-				% unicode bidi algorithm. esentially it implemented
-				% unicode bidi algorithm ith Lua, and embeded it into 
-				% TeX via Lua callbacks. 
-	%
-	layout=tabular graphics, % layout=tabualr fix the tabular direction problem that Juda has meantioned.
-							 % layout=graphics fix the use of tikz and similar environments, so there is no 
-							 % need for \bodydir TLT before such environment anymore.
-	%
-	hebrew,provide=*		 % the hebrew option et hebrew as the main language, provide=* 
-							 % makes babel to load the information for hebrew from the new .ini file
-							 % instead of the old .ldf file, equivalent to \babelprovide[import]{hebrew}....
-	]{babel}
+\usepackage[bidi=basic, layout=tabular graphics, hebrew,provide=*]{babel}
 	
-\babelprovide[
-	import, % using .ini file instead of .ldf
-	%
-	onchar=ids fonts % The `onchar` option means that when 
-					 % TeX will encounter a glyph with this
-					 % language script (latin in this case),
-					 % it will change to this language automatically.
-					 % Usually when hebrew is the main language one
-					 % should add the `letters` option, which will prevent
-					 % non-letters (characters with catagory codes 
-					 % different from 11) to replace language. 
-					 % But I want to replace `=` and `\` in this document, 
-					 % since it is used only in english context. We will
-					 % fix numbers and other glyphs in the next few lines. 
-	]{english}
+\babelprovide[import,onchar=ids fonts ]{english}
 
 % \babelcharproperty {< character code >} {direction} {< bidi unicode algorithm directionallity catagory >} 
 
 \babelcharproperty{`\\}{direction}{l} % this will make make the glyph `\` to behave as a strong left character.
-									  % It is convinient with verbatim text, e.g., `\macroname`. 
+				      % It is convinient with verbatim text, e.g., `\macroname`. 
 
 
 % \babelcharproperty {< character code >} [<last character code>] {locale} {< lang\empty >}  
 									  
 \babelcharproperty{32}[64]{locale}{}   % These three lines remove all non latin letters ascii characters  
 \babelcharproperty{91}[96]{locale}{}   % from the list of glyphs affected by the `onchar` option used for 
-\babelcharproperty{123}[126]{locale}{} % the english language. It is not necessary if the `letters` option  
-									   % is used. 
+\babelcharproperty{123}[126]{locale}{} % the english language. It is not necessary if the `letters` option is used. 
 									 
-
 \babelcharproperty{`=}{locale}{english}  % Restoring `=` and `\` to the list 
 \babelcharproperty{`\\}{locale}{english} % used by the `onchar` option. 
 
-
 % \babelfont [< lang >] {< family (rm/sf/tt) >} [< font options >] {< font name >}
-
-\babelfont[hebrew]{sf}[RawFeature=+shuffle]{Open Sans Hebrew} % Hebrew quotes are of the form ”מרכאות„ but 
+\babelfont[hebrew]{sf}[RawFeature=+shuffle,Renderer=Harf]{Open Sans Hebrew} % Hebrew quotes are of the form ”מרכאות„ but 
 															  % I'm use to write quotes in TeX as ''מרכאות``.
 															  % Since luaotfload enables creating font features 
 															  % ``on the fly'', I replaced `“` with `„` when the 
@@ -99,7 +60,7 @@
 		},
 	}
 	
-	% Creating the fallback font. 
+	% Adding a fallback font. 
 	luaotfload.add_fallback
 	  (
 		"hebfallback",
@@ -142,7 +103,7 @@
 	\title{מצגות Beamer בעברית הן בגדר האפשר}
 	\subtitle{החלום שכולנו חיכינו לו מתגשם סוף כל סוף}
 	
-	\institute{האגודה הבינלאומית ל\TeX\/ נולוגיה עברית}
+	\institute{האגודה הבינלאומית ל\TeX נולוגיה עברית}
 	\date{אוגוסט 2018}
 	\frame{\titlepage}
 	
@@ -153,7 +114,7 @@
 		\begin{itemize}
 			\item פתרון מודרני שלם (אך לא מושלם) ליצירת מצגות עבריות ב-Beamer.
 			\item משתמש במחלקות וחבילות הרגילות, ולא דורש תחזוק של פוֹרְקִים עם התאמה לעברית. למעשה, פחות או יותר הכל עובד מהקופסה חוץ מכמה תיקונים קטנים שנדרשים.
-			\item המנוע הוא Lua\TeX\/, על הכיווניות, והפונטים אחראית החבילה Babel, והעיצוב הוא של הערכה Metropolis האלגנטית, הברורה והנקיה.
+			\item המנוע הוא Lua\TeX, על הכיווניות, והפונטים אחראית החבילה Babel, והעיצוב הוא של הערכה Metropolis האלגנטית, הברורה והנקיה.
 		\end{itemize}
 	\end{frame}
 	
@@ -228,7 +189,7 @@
 	
 	
 	\begin{frame}{מה לא עובד?}
-		הבעיה היחידה שנתקלתי בה ולא מצאתי פתרון עבורה היא בביבליוגרפיה עם Bib\LaTeX\/. רוב הרשומות ב-\texttt{\textbackslash printbibliography}  מסתדרות מעולה, ושומרות על כיווניות בלי בעיה. לעומת זאת, רשומות של תרגומים שמשתמשות בשדה \texttt{related} ובשדה \texttt{relatedtype} עם הערך \texttt{translationof} מתחרבשות בחלק שמציג את הספר המקורי: כל האותיות מופיעות בסדר הפוך. אם מצאתם פתרון לבעיה, אשמח לשמוע מתחרבשים בחלק שמציג את המקור: כל האותיות מופיעות בסדר הפוך. אם מצאתם פתרון לבעיה, אשמח לשמוע :-) (פרטי יצירת קשר יש בעמוד השער).
+		הבעיה היחידה שנתקלתי בה ולא מצאתי פתרון עבורה היא בביבליוגרפיה עם Bib\LaTeX. רוב הרשומות ב-\texttt{\textbackslash printbibliography}  מסתדרות מעולה, ושומרות על כיווניות בלי בעיה. לעומת זאת, רשומות של תרגומים שמשתמשות בשדה \texttt{related} ובשדה \texttt{relatedtype} עם הערך \texttt{translationof} מתחרבשות בחלק שמציג את הספר המקורי: כל האותיות מופיעות בסדר הפוך. אם מצאתם פתרון לבעיה, אשמח לשמוע מתחרבשים בחלק שמציג את המקור: כל האותיות מופיעות בסדר הפוך. אם מצאתם פתרון לבעיה, אשמח לשמוע :-) (פרטי יצירת קשר יש בעמוד השער).
 		
 		דוגמה לבעיה אפשר לראות בתרגום הוולשי של הארי פוטר במצגת הזאת:
 		\smallurl{https://ac.digitalwords.net/\#nonacademic-2018-08-23}\\
