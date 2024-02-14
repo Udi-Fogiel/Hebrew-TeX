@@ -20,15 +20,10 @@
 									 
 \babelcharproperty{`=}{locale}{english}  % Restoring `=` and `\` to the list 
 \babelcharproperty{`\\}{locale}{english} % used by the `onchar` option. 
+\babelcharproperty{`•}{locale}{english} % used by the `onchar` option. 
 
 % \babelfont [< lang >] {< family (rm/sf/tt) >} [< font options >] {< font name >}
-\babelfont[hebrew]{sf}[RawFeature=+shuffle,Renderer=Harf]{Open Sans Hebrew} % Hebrew quotes are of the form ”מרכאות„ but 
-															  % I'm use to write quotes in TeX as ''מרכאות``.
-															  % Since luaotfload enables creating font features 
-															  % ``on the fly'', I replaced `“` with `„` when the 
-															  % hebrew font is used. I also replaced the normal dash
-															  % `-` with the hebrew maqaf, since it is more convinient 
-															  % to type the normal dash (beacuse it is on the keyboard).
+\babelfont[hebrew]{sf}[RawFeature=+shuffle,Renderer=HarfBuzz]{Nachlieli CLM} 
 														
 % I'm adding colors to the english font just to demonstrate 
 % how the latin letters, `=` and `\` will typeset in the 
@@ -37,17 +32,10 @@
 \babelfont[english]{sf}[Color=blue]{Fira Sans}
 \babelfont[english]{tt}[Color=blue,RawFeature={fallback=hebfallback}]{Fira Mono}
 
-% `RawFeature={fallback=hebfallback}` = As you wanted to use the defualt fonts for english, 
-% I chose "Fira Mono" for english typewriter, but in the document there is a paragraph which 
-% use this font and has hebrew letters (which are not present in this dont), so we can solve 
-% it by creating a fallback font. A font to be used when Fira Mono is used and we encounter a 
-% glyph that does not exists in the Fira Mono. I chose Miriam Mono CLM, and added the blue 
-% as well. 
-
-
 % Creating new font feature for the hebrew font 
 \directlua
 {
+	% replace hyphen with maqaf in hebrew
 	fonts.handlers.otf.addfeature
 	{
 		name = "shuffle",
@@ -56,7 +44,6 @@
 		{
 			["־"] = {"-"},
 			["-"] = {"־"},
-			["“"] = {"„"}
 		},
 	}
 	
@@ -168,7 +155,7 @@
 		
 		\vfill
 		
-		\leavevmode\vtop{\hsize=.45\textwidth
+		\leavevmode\vtop{\hsize=.55\textwidth
 			קלט:\\
 			\selectlanguage{english}
 			\begin{verbatim}
@@ -177,8 +164,8 @@
 				\end{tabular}
 			\end{verbatim}
 		}
-		\hskip .15\textwidth
-		\vtop{\hsize=.35\textwidth
+		\hskip .01\textwidth
+		\vtop{\hsize=.40\textwidth
 			פלט:\\[3mm]
 			\begin{tabular}{r|r|r}
 				שמאל &
@@ -204,7 +191,7 @@
 	
 	
 	\begin{frame}{דוגמה למצגת מורכבת}
-		הצורך ביצירת מצגת עברית עלה אצלי עבור הרצאה שהכנתי לכנס מיתופיה 2018 (``הארי פוטר וכינויי הגוף השני''), הרצאה שהיא גלגול של הרצאה שהצגתי בכנסים אקדמיים (בלשניים וקלטולוגיים) לקהל הפוטריסטי. לא יכולתי להסתמך על מצגת באנגלית בגלל שלא כולם בקהל קוראים באנגלית באופן שוטף, כך שהייתי צריך לתרגם את המצגת הקיימת שהיתה לי לעברית. PowerPoint של מיקרוסופט או Impress של ליברה-אופיס הן לא אופציות: אני מעדיף למות תריסר מיתות משונות לפני שאגע בדברים האלה. מתוך הצורך הגיעה נבירה ב-\url{tex.stackexchange.com} ויצירת הפתרון הזה.
+		הצורך ביצירת מצגת עברית עלה אצלי עבור הרצאה שהכנתי לכנס מיתופיה 2018 („הארי פוטר וכינויי הגוף השני”), הרצאה שהיא גלגול של הרצאה שהצגתי בכנסים אקדמיים (בלשניים וקלטולוגיים) לקהל הפוטריסטי. לא יכולתי להסתמך על מצגת באנגלית בגלל שלא כולם בקהל קוראים באנגלית באופן שוטף, כך שהייתי צריך לתרגם את המצגת הקיימת שהיתה לי לעברית. PowerPoint של מיקרוסופט או Impress של ליברה-אופיס הן לא אופציות: אני מעדיף למות תריסר מיתות משונות לפני שאגע בדברים האלה. מתוך הצורך הגיעה נבירה ב-\url{tex.stackexchange.com} ויצירת הפתרון הזה.
 		
 		למה אני מספר את זה? כי אם אתם רוצים לראות מצגת די מורכבת שעובדת יפה עם עברית ושקוד המקור שלה זמין, גשו אל:\\
 		\smallurl{https://ac.digitalwords.net/\#nonacademic-2018-08-23}
@@ -218,8 +205,7 @@
 	\section{וככה סעיף לקראת הסוף}
 	
 	\begin{frame}{הערת-אגב: פונטים למצגות}
-		במצגת הזאת משמש הפונט \href{https://en.wikipedia.org/wiki/Open_Sans}{Open Sans} של סטיב מטסון עם \href{https://yaronimus.wordpress.com/2014/01/19/\%D7\%90\%D7\%95\%D7\%A4\%D7\%9F-\%D7\%A1\%D7\%90\%D7\%A0\%D7\%A1-\%D7\%92\%D7\%95\%D7\%A4\%D7\%9F-\%D7\%A8\%D7\%A9\%D7\%AA-\%D7\%97\%D7\%99\%D7\%A0\%D7\%9E\%D7\%99-\%D7\%91\%D7\%A2\%D7\%99\%D7\%A6\%D7\%95\%D7\%91\%D7\%95-\%D7\%A9\%D7\%9C-\%D7\%99\%D7\%90/}{ההרחבה העברית} שעיצב ינק יונטף (``הפונט של הארץ'').
+		במצגת הזאת משמש הפונט \href{https://en.wikipedia.org/wiki/Open_Sans}{Open Sans} של סטיב מטסון עם \href{https://yaronimus.wordpress.com/2014/01/19/\%D7\%90\%D7\%95\%D7\%A4\%D7\%9F-\%D7\%A1\%D7\%90\%D7\%A0\%D7\%A1-\%D7\%92\%D7\%95\%D7\%A4\%D7\%9F-\%D7\%A8\%D7\%A9\%D7\%AA-\%D7\%97\%D7\%99\%D7\%A0\%D7\%9E\%D7\%99-\%D7\%91\%D7\%A2\%D7\%99\%D7\%A6\%D7\%95\%D7\%91\%D7\%95-\%D7\%A9\%D7\%9C-\%D7\%99\%D7\%90/}{ההרחבה העברית} שעיצב ינק יונטף („הפונט של הארץ”).
 		לדעתי זה פונט מעולה למצגות, בדומה ל-Fira Sans (הפונט הדיפולטיבי של Metropolis); $\mbox{אָלֶף}$ (Alef), עם כל חיבתי אליו, לא מתאים למצגות.
 	\end{frame}
 \end{document}
-
